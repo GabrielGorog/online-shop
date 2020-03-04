@@ -1,8 +1,10 @@
 package org.fasttrackit.onlineshop;
 
 import org.fasttrackit.onlineshop.domain.Product;
+import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.service.ProductService;
 import org.fasttrackit.onlineshop.transfer.SaveProductRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +25,46 @@ public class ProductServiceIntegrationTests {
 
     @Test
     void createProduct_whenValidRequest_thenProductisCreated() {
+        createProduct();
+
+    }
+
+    @Test
+    void createProduct_whenMissingName_thenExceptionisThrown() {
+        SaveProductRequest request = new SaveProductRequest();
+        request.setQuantity(100);
+        request.setPrice(300.5);
+
+        try {
+            productService.createProduct(request);
+        } catch (Exception e) {
+            assertThat(e, notNullValue());
+            assertThat("Unexpected exception type. ", e instanceof TransactionSystemException);
+        }
+    }
+    @Test
+    void getproduct_whenExistingProduct_thenReturnProduct () {
+        Product product = createProduct();
+
+        Product response = productService.getProduct(product.getId());
+
+        assertThat(response, notNullValue());
+        assertThat(response.getId(), is(product.getId()));
+        assertThat(response.getId(), is(product.getName()));
+        assertThat(response.getId(), is(product.getQuantity()));
+        assertThat(response.getId(), is(product.getPrice()));
+        assertThat(response.getId(), is(product.getDescription()));
+        assertThat(response.getId(), is(product.getImageUrl()));
+
+    }
+
+    @Test
+    void getProduct_whenNonExistingProduct_thenThrowResourceNotFoundException () {
+        Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> productService.getProduct(9999999));
+    }
+
+    private Product createProduct() {
         SaveProductRequest request = new SaveProductRequest();
         request.setName("Phone");
         request.setQuantity(100);
@@ -36,18 +78,6 @@ public class ProductServiceIntegrationTests {
         assertThat(product.getQuantity(), is(request.getQuantity()));
         assertThat(product.getPrice(),is(request.getPrice()));
 
-    }
-    @Test
-    void createProduct_whenMissingName_thenExceptionisThrown() {
-        SaveProductRequest request = new SaveProductRequest();
-        request.setQuantity(100);
-        request.setPrice(300.5);
-
-        try {
-            productService.createProduct(request);
-        } catch (Exception e) {
-            assertThat(e, notNullValue());
-            assertThat("Unexpected exception type. ", e instanceof TransactionSystemException);
-        }
+        return product;
     }
 }
