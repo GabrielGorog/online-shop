@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.TransactionSystemException;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
@@ -62,6 +61,38 @@ public class ProductServiceIntegrationTests {
     void getProduct_whenNonExistingProduct_thenThrowResourceNotFoundException () {
         Assertions.assertThrows(ResourceNotFoundException.class,
                 () -> productService.getProduct(9999999));
+    }
+
+    @Test
+    void updateProduct_whenVaidRequest_thenReturnUpdatedProduct () {
+        Product product = createProduct();
+
+        SaveProductRequest request = new SaveProductRequest();
+        request.setName(product.getName() + " updated");
+        request.setDescription(product.getDescription() + "updated");
+        request.setPrice(product.getPrice() + 10);
+        request.setQuantity(product.getQuantity() + 10);
+
+
+        Product updatedProduct = productService.updateProduct(product.getId(), request);
+
+        assertThat(updatedProduct, notNullValue());
+        assertThat(updatedProduct.getId(), is(product.getId()));
+        assertThat(updatedProduct.getName(), is(request.getName()));
+        assertThat(updatedProduct.getDescription(), is(request.getDescription()));
+        assertThat(updatedProduct.getPrice(), is(request.getPrice()));
+        assertThat(updatedProduct.getQuantity(), is(request.getQuantity()));
+
+    }
+
+    @Test
+    void deleteProduct_whenExistingProduct_thenProductDoesNotExistAnymore() {
+        Product product = createProduct();
+
+        productService.deleteProduct(product.getId());
+
+        Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> productService.getProduct(product.getId()));
     }
 
     private Product createProduct() {
