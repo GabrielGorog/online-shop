@@ -58,6 +58,8 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product " + id + "not found."));
     }
 
+
+
     public Product updateProduct(long id, SaveProductRequest request) {
         LOGGER.info("Updating product {}: {}", id, request);
         Product product = getProduct(id);
