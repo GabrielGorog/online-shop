@@ -1,6 +1,8 @@
 package org.fasttrackit.onlineshop.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Cart {
@@ -11,6 +13,27 @@ public class Cart {
     @OneToOne(fetch =  FetchType.LAZY)
     @MapsId
     private Customer customer;
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "cart product", joinColumns = @JoinColumn(name = "cart id"),
+    inverseJoinColumns = @JoinColumn(name = "product id"))
+
+    private Set<Product> products = new HashSet<>();
+
+    public void addProductToCart(Product product) {
+        // adding received product to current cart
+        products.add(product);
+
+        // adding current cart to the received product's carts set
+        product.getCarts().add(this);
+
+    }
+
+    public  void removeProductFromCart(Product product) {
+        products.remove(product);
+
+        product.getCarts().remove(this);
+    }
 
     public long getId() {
         return id;

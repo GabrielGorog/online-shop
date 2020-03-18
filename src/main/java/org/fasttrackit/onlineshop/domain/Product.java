@@ -1,10 +1,10 @@
 package org.fasttrackit.onlineshop.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Product {
@@ -19,6 +19,9 @@ public class Product {
     @NotNull
     private int quantity;
     private String imageUrl;
+
+    @ManyToMany(mappedBy = "products")
+    private Set<Cart> carts = new HashSet<>();
 
     public long getId() {
         return id;
@@ -78,5 +81,9 @@ public class Product {
                 ", quantity=" + quantity +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    public Collection<Cart> getCarts() {
+        return null;
     }
 }
