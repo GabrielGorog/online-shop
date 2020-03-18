@@ -36,6 +36,6 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomer(@PathVariable long id) {
         Customer customer = customerService.getCustomer(id);
 
-                return new ResponseEntity<>(customer, HttpStatus.OK)
+                return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 }

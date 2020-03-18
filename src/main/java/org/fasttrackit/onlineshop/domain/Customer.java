@@ -13,7 +13,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotNull
-    private String fristName;
+    private String firstName;
     @NotNull
     private String lastName;
 
@@ -21,7 +21,7 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "id=" + id +
-                ", fristName='" + fristName + '\'' +
+                ", fristName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
@@ -34,12 +34,12 @@ public class Customer {
         this.id = id;
     }
 
-    public String getFristName() {
-        return fristName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFristName(String fristName) {
-        this.fristName = fristName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
