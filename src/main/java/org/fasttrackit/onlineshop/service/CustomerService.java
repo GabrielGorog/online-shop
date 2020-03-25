@@ -33,7 +33,7 @@ public class CustomerService {
 
         return customerRepository.save(customer);
 
-        public Customer getCustomer(long id) {
+       public Customer getCustomer(long id) {
             LOGGER.info("Retrieving customer {}", id);
         }
         return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("" +
