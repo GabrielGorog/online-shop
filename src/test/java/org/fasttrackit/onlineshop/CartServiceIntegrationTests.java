@@ -9,6 +9,7 @@ import org.fasttrackit.onlineshop.steps.ProductTestSteps;
 import org.fasttrackit.onlineshop.transfer.cart.AddProductsToCartRequest;
 import org.fasttrackit.onlineshop.transfer.cart.CartResponse;
 import org.fasttrackit.onlineshop.transfer.cart.ProductInCartResponse;
+import org.fasttrackit.onlineshop.transfer.product.ProductResponse;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class CartServiceIntegrationTests {
     @Test
     void addProductstoCart_whenNewCart_thenCartisCreated() {
         Customer customer = customerTestSteps.createCustomer();
-        Product product = productTestSteps.createProduct();
+        ProductResponse product = productTestSteps.createProduct();
 
         AddProductsToCartRequest cartRequest = new AddProductsToCartRequest();
         cartRequest.setCustomerId(customer.getId());
