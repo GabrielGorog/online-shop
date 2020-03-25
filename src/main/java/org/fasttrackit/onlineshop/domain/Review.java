@@ -3,8 +3,9 @@ package org.fasttrackit.onlineshop.domain;
 import javax.persistence.*;
 
 @Entity
-
 public class Review {
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -46,4 +47,3 @@ public class Review {
                 '}';
     }
 }
-

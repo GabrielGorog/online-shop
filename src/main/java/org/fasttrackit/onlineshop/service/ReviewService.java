@@ -20,19 +20,18 @@ public class ReviewService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewService.class);
 
+    @Autowired
     private final ReviewRepository reviewRepository;
 
-    @Autowired
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
 
-
     @Transactional
-    public Page<ReviewResponse> getReviews(long productId, Pageable) {
-        LOGGER.info("Retrieving review for product {}", productId);
+    public Page<ReviewResponse> getReviews(long productId, Pageable pageable) {
+        LOGGER.info("Retrieving reviews for product {}", productId);
 
-        Page<Review> reviewsPage = reviewRepository.findByProductId(productId, Pageable.unpaged());
+        Page<Review> reviewsPage = reviewRepository.findByProductId(productId, pageable);
 
         List<ReviewResponse> reviewDtos = new ArrayList<>();
 
@@ -43,9 +42,6 @@ public class ReviewService {
 
             reviewDtos.add(dto);
         }
-
-        return new PageImpl<>(reviewDtos, Pageable.unpaged(), reviewsPage.getTotalElements());
+        return new PageImpl<>(reviewDtos, pageable, reviewsPage.getTotalElements());
     }
-
-
 }

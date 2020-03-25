@@ -2,7 +2,6 @@ package org.fasttrackit.onlineshop.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,18 +9,27 @@ import java.util.Set;
 public class Product {
 
     @Id
-    private  long id;
+    @GeneratedValue
+    private long id;
     @NotNull
     private String name;
     private String description;
     @NotNull
-    private  double price;
+    private double price;
     @NotNull
     private int quantity;
     private String imageUrl;
 
     @ManyToMany(mappedBy = "products")
     private Set<Cart> carts = new HashSet<>();
+
+    public Set<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<Cart> carts) {
+        this.carts = carts;
+    }
 
     public long getId() {
         return id;
@@ -71,6 +79,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+
     @Override
     public String toString() {
         return "Product{" +
@@ -82,9 +91,4 @@ public class Product {
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
-
-    public Collection<Cart> getCarts() {
-        return null;
-    }
-
 }

@@ -18,11 +18,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-
 @Service
 public class CartService {
 
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CartService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
 
     private final CartRepository cartRepository;
     private final CustomerService customerService;
@@ -33,15 +32,14 @@ public class CartService {
         this.cartRepository = cartRepository;
         this.customerService = customerService;
         this.productService = productService;
+
     }
 
     @Transactional
     public void addProductsToCart(AddProductsToCartRequest request) {
         LOGGER.info("Adding products to cart: {}", request);
 
-        Cart cart = cartRepository.findById(request.getCustomerId())
-                .orElse(new Cart());
-
+        Cart cart = cartRepository.findById(request.getCustomerId()).orElse(new Cart());
 
         if (cart.getCustomer() == null) {
             Customer customer = customerService.getCustomer(request.getCustomerId());
@@ -53,39 +51,33 @@ public class CartService {
             Product product = productService.getProduct(id);
             cart.addProductToCart(product);
         }
+
         cartRepository.save(cart);
     }
 
-
-    // returning DTO to avoid Lazy Loading exceptions
+    //    returning DTO to avoid Lazy Loading exceptions
     @Transactional
     public CartResponse getCart(long customerId) {
-        LOGGER.info("retrieving cart items for customer {}", customerId);
+        LOGGER.info("Retrieving cart items for customer {}", customerId);
 
-        Cart cart = cartRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Cart" + customerId + " does not exist."));
+        Cart cart = cartRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException
+                ("Cart " + customerId + " does not exist."));
 
         CartResponse cartResponse = new CartResponse();
         cartResponse.setId(cart.getId());
 
-        Set<ProductInCartResponse> productsDtos = new HashSet<>();
+        Set<ProductInCartResponse> productDtos = new HashSet<>();
 
-        Iterator<Product> productIterator = cart.getProducts().iterator();
-
-        while (productIterator.hasNext()) {
-            Product nextProduct = productIterator.next();
-
+        for (Product nextProduct : cart.getProducts()) {
             ProductInCartResponse productDto = new ProductInCartResponse();
             productDto.setId(nextProduct.getId());
             productDto.setName(nextProduct.getName());
             productDto.setPrice(nextProduct.getPrice());
 
-            productsDtos.add(productDto);
-
+            productDtos.add(productDto);
         }
 
-        cartResponse.setProducts(productsDtos);
+        cartResponse.setProducts(productDtos);
 
         return cartResponse;
     }

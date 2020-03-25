@@ -10,11 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class CustomerService {
-
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CustomerService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
     private final ObjectMapper objectMapper;
@@ -22,21 +20,22 @@ public class CustomerService {
     @Autowired
     public CustomerService(CustomerRepository customerRepository, ObjectMapper objectMapper) {
         this.customerRepository = customerRepository;
-
         this.objectMapper = objectMapper;
     }
 
-    public Customer createCustomer(SaveCustomerRequest request) {
+    public Customer createCustomer(SaveCustomerRequest request){
         LOGGER.info("Creating customer {}", request);
 
         Customer customer = objectMapper.convertValue(request, Customer.class);
 
         return customerRepository.save(customer);
+    }
 
-       public Customer getCustomer(long id) {
-            LOGGER.info("Retrieving customer {}", id);
-        }
-        return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("" +
-                "Customer" + id + " not found."));
-        }
+    public Customer getCustomer(long id){
+        LOGGER.info("Retrieving customer {}", id);
+
+        return customerRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("" + "Customer " + id + " not found."));
+    }
+
 }

@@ -17,15 +17,6 @@ public class Customer {
     @NotNull
     private String lastName;
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", fristName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
-    }
-
     public long getId() {
         return id;
     }
@@ -48,5 +39,14 @@ public class Customer {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }

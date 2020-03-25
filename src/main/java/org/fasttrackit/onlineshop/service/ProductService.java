@@ -16,20 +16,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(ProductService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
 
-    // Inversion of Control (IoC)
+    //    Inversion of Control (IoC)
     private final ProductRepository productRepository;
 
-    // Dependency Injection (from IoC container)
+    //    Dependency Injection (from IoC container)
     @Autowired
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     public Product createProduct(SaveProductRequest request) {
-        LOGGER.info("Creating product {} ", request);
+
+        LOGGER.info("Creating product {}", request);
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -43,41 +43,34 @@ public class ProductService {
     public Product getProduct(long id) {
         LOGGER.info("Retrieving product {}", id);
 
-
-        // optional usage explained
+//        optional usage explained
 //        Optional<Product> productOptional = productRepository.findById(id);
 //
 //        if (productOptional.isPresent()) {
 //            return productOptional.get();
-//        } else {
-//            throw new ResourceNotFoundException("Product " + id + "not found");
+//        }else {
+//            throw new ResourceNotFoundException("Product " + id + "not found.");
 //        }
 
-        return productRepository.findById(id)
-
-                // lambda expressions
-                .orElseThrow(() -> new ResourceNotFoundException("Product " + id + "not found."));
+//        lambda expressions
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException
+                ("Product " + id + "not found."));
     }
-
 
     public Page<Product> getProducts(GetProductsRequest request, Pageable pageable) {
-        LOGGER.info("Searching products: {}",request);
 
-        if(request !=null)
+        LOGGER.info("Searching products: {}", request);
 
-    {
-        if (request.getPartialName() != null && request.getMinQuantity() != null) {
-            return productRepository.findByNameContainingAndQuantityGreaterThanEqual(request.getPartialName(),
-                    request.getMinQuantity(), pageable);
-        } else if (request.getPartialName() != null) {
-            return productRepository.findByNameContaining(request.getPartialName(), pageable);
+        if (request != null) {
+            if (request.getPartialName() != null && request.getMinQuantity() != null){
+                return productRepository.findByNameContainingAndQuantityGreaterThanEqual(request.getPartialName(),
+                        request.getMinQuantity(), pageable);
+            } else if (request.getPartialName() != null){
+                return productRepository.findByNameContaining(request.getPartialName(),pageable);
+            }
         }
-    }
-
         return productRepository.findAll(pageable);
     }
-
-
 
     public Product updateProduct(long id, SaveProductRequest request) {
         LOGGER.info("Updating product {}: {}", id, request);
@@ -86,7 +79,6 @@ public class ProductService {
         BeanUtils.copyProperties(request, product);
 
         return productRepository.save(product);
-
     }
 
     public void deleteProduct(long id) {
@@ -94,5 +86,5 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-}
 
+}
